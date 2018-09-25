@@ -1,0 +1,8 @@
+{
+  "name": "kaizten-simulation-js",
+  "version": "1.0.0",
+  "description": "Library aimed at handling real-time data through WebSockets",
+  "main": "index.js",
+  "author": "Christopher Expósito-Izquierdo <cexposit@ull.edu.es>",
+  "license": "MIT"
+}
