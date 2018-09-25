@@ -8,5 +8,8 @@
   "repository": {
     "url": "https://github.com/KaizTen/kaizten-realtime-js",
     "type": "git"
+  },
+  "dependencies": {
+    "gsap": "^2.0.2"
   }
 }
