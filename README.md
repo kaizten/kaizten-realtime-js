@@ -1,3 +1,3 @@
-# Kaizten Simulation JS
+# Kaizten Real-Time JS
 
 

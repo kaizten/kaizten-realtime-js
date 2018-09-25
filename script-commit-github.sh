@@ -7,5 +7,5 @@ git add *
 git config --global user.email "cexposit@ull.edu.es"
 git config --global user.name "cexposit"
 git commit -m "${commitMessage}"
-git remote add origin https://github.com/KaizTen/kaizten-simulation-js
+git remote add origin https://github.com/KaizTen/kaizten-realtime-js
 git push -u origin master --force
