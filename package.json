@@ -4,5 +4,9 @@
   "description": "Library aimed at handling real-time data through WebSockets",
   "main": "index.js",
   "author": "Christopher Expósito-Izquierdo <cexposit@ull.edu.es>",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "url": "https://github.com/KaizTen/kaizten-realtime-js",
+    "type": "git"
+  }
 }
