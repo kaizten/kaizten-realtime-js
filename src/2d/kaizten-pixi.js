@@ -37,7 +37,7 @@ export function setUp () {
   loader
     .add('truck.png')
     .on('progress')
-    .on('progress', loadProgressHandler)
+    //.on('progress', loadProgressHandler)
     .load(onSetUp)
   gameLoop()
 }
