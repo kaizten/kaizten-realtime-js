@@ -7,6 +7,7 @@ import {
 } from './kaizten-data.js'
 import { randomPointInt } from './kaizten-maths.js'
 import { appContext } from './kaizten-simulation.js'
+import { TimelineMax } from 'gsap'
 
 // Timeline
 export let timeline
