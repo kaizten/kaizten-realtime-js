@@ -22,9 +22,7 @@ let renderer
 let canvas
 export let agents
 
-export function initialize () {
-
-}
+export function initialize () { }
 
 export function setUp () {
   agents = new Map()
@@ -39,7 +37,7 @@ export function setUp () {
   loader
     .add('truck.png')
     .on('progress')
-    //.on('progress', loadProgressHandler)
+    .on('progress', loadProgressHandler)
     .load(onSetUp)
   gameLoop()
 }
