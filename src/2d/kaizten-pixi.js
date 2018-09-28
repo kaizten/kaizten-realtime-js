@@ -73,6 +73,8 @@ export function handlerUpdateMessage (message) { }
 
 export function handlerNewProperty (time, previousTime, id, properties) {
   // Nuevo agente
+  console.log("New Agent")
+  //
   let agent = {}
   agent.properties = properties
   agent.sprite = newSprite('truck.png')
