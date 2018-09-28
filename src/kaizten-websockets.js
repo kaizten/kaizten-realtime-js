@@ -10,6 +10,7 @@ import {
 } from './kaizten-simulation.js'
 
 let webSocket
+let url
 export let minRequiredTime
 export let maxRequiredTime
 export let numberOfNewMessages
@@ -40,7 +41,8 @@ export function requestDataToServer (min, max) {
   maxRequiredTime = Math.max(maxRequiredTime, max)
 }
 
-export function setUp () {
+export function setUp (urlServer) {
+  url = urlServer
   minRequiredTime = Number.POSITIVE_INFINITY
   maxRequiredTime = Number.NEGATIVE_INFINITY
   numberOfNewMessages = 0

@@ -10,7 +10,7 @@ export let appContext
 
 export function setUp(context) {
   appContext = context
-  setUpWebSockets()
+  setUpWebSockets(appContext.url)
   setUpData()
   appContext.setUp()
 }
