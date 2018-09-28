@@ -26,13 +26,13 @@ import {
 export function initialize () {
   initializePixi()
   initializeGsap()
-  initializeUi()
+  //initializeUi()
 }
 
 export function setUp () {
   setUpPixi()
   setUpGsap()
-  setUpUi()
+  //setUpUi()
 }
 
 export function handlerNewMessage (message) {
