@@ -20,6 +20,7 @@ export let numberOfRemoveMessages
 export function initialize () {
   if (!webSocket || webSocket.readyState !== 1) {
     webSocket = new WebSocket(url, 'v10.stomp')
+    console.log("websocket: " + webSocket)
     //webSocket = new WebSocket('ws://localhost:8181', 'v10.stomp')
     // webSocket = new WebSocket("ws://192.168.1.35:8181", "v10.stomp");
     // webSocket = new WebSocket("ws://10.209.3.94:8181", "v10.stomp");
