@@ -1,6 +1,5 @@
 import { 
   onSetUp 
-//} from '../kaizten-simulation/kaizten-simulation.js'
 } from 'kaizten-realtime-js/src/kaizten-simulation'
 import {
   timeline,

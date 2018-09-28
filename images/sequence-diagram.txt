@@ -1,0 +1,18 @@
+participant html
+participant simulator
+participant ws
+participant store
+participant app
+
+html ->+ simulator: setUp
+simulator -> ws: setUp
+simulator -> store: setUp
+simulator -> app: setUp
+
+app -> simulator: onSetUp
+
+simulator ->+ ws: initialize
+
+ws -> store: initialize
+ws -> app: initialize
+

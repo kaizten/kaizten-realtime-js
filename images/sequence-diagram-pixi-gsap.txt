@@ -1,0 +1,27 @@
+participant html
+participant simulator
+participant ws
+participant store
+participant app
+participant pixi
+participant gsap
+
+html ->+ simulator: setUp
+simulator -> ws: setUp
+simulator -> store: setUp
+simulator -> app: setUp
+
+app -> pixi: setUp
+app -> gsap: setUp
+
+app -> simulator: onSetUp
+
+simulator ->+ ws: initialize
+
+ws -> store: initialize
+ws -> app: initialize
+
+app -> pixi: initialize
+app -> gsap: initialize
+
+
