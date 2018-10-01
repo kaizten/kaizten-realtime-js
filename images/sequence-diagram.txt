@@ -16,3 +16,7 @@ simulator ->+ ws: initialize
 ws -> store: initialize
 ws -> app: initialize
 
+ws -> simulator: onInitialize
+
+
+
