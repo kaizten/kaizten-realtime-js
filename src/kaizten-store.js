@@ -1,22 +1,23 @@
 import {
   requestDataToServer as requestDataToServerWS,
 } from './kaizten-websockets.js'
+import * as Rx from "rxjs"
 
 export let timeEventsQueue
 export let structure
 
 // Minimum time with data
-export let minTime
+export let minTime = new Rx.BehaviorSubject()
 // Maximum time with data
-export let maxTime
+export let maxTime = new Rx.BehaviorSubject()
 // Minimum requested time to the server
-export let minRequestedTime
+export let minRequestedTime = new Rx.BehaviorSubject()
 // Maximum requested time to the server
-export let maxRequestedTime
+export let maxRequestedTime = new Rx.BehaviorSubject()
 // Minimum time with data in server
-export let minTimeServer
+export let minTimeServer = new Rx.BehaviorSubject()
 // Maximum time with data in server
-export let maxTimeServer
+export let maxTimeServer = new Rx.BehaviorSubject()
 // min-max -> promise
 export let requests
 // min-max -> resolve
@@ -29,12 +30,12 @@ export function initialize () {
   requests = new Map()
   waiting = new Map()
   //
-  minTime = Number.POSITIVE_INFINITY
-  maxTime = Number.NEGATIVE_INFINITY
-  minRequestedTime = Number.POSITIVE_INFINITY
-  maxRequestedTime = Number.NEGATIVE_INFINITY
-  minTimeServer = Number.POSITIVE_INFINITY
-  maxTimeServer = Number.NEGATIVE_INFINITY
+  minTime.next(Number.POSITIVE_INFINITY)
+  maxTime.next(Number.NEGATIVE_INFINITY)
+  minRequestedTime.next(Number.POSITIVE_INFINITY)
+  maxRequestedTime.next(Number.NEGATIVE_INFINITY)
+  minTimeServer.next(Number.POSITIVE_INFINITY)
+  maxTimeServer.next(Number.NEGATIVE_INFINITY)
 }
 
 export function setUp () {
@@ -76,13 +77,13 @@ Output:
 export function getDataInRange (min, max) {
   let key = "" + min + "-" + max
   let promise = new Promise((resolve, reject) => {
-    if (minTimeServer !== Number.POSITIVE_INFINITY) {
-      min = Math.max(min, minTimeServer)
+    if (minTimeServer.value !== Number.POSITIVE_INFINITY) {
+      min = Math.max(min, minTimeServer.value)
     }
-    if (maxTimeServer !== Number.NEGATIVE_INFINITY) {
-      max = Math.min(max, maxTimeServer)
+    if (maxTimeServer.value !== Number.NEGATIVE_INFINITY) {
+      max = Math.min(max, maxTimeServer.value)
     }
-    if ((min >= minRequestedTime) && (max <= maxRequestedTime)) {
+    if ((min >= minRequestedTime.value) && (max <= maxRequestedTime.value)) {
       let response = {
         min: min,
         max: max,
@@ -98,11 +99,11 @@ export function getDataInRange (min, max) {
       resolve(response)
     } else {
       console.log('# Data Start Request: [' + min + ', ' + max + ']')
-      if ((maxRequestedTime !== Number.NEGATIVE_INFINITY) && (max > maxRequestedTime)) {
-        min = maxRequestedTime + 0.1
+      if ((maxRequestedTime.value !== Number.NEGATIVE_INFINITY) && (max > maxRequestedTime.value)) {
+        min = maxRequestedTime.value + 0.1
       }
-      minRequestedTime = Math.min(minRequestedTime, min)
-      maxRequestedTime = Math.max(maxRequestedTime, max)
+      minRequestedTime.next(Math.min(minRequestedTime.value, min))
+      maxRequestedTime.next(Math.max(maxRequestedTime.value, max))
       requestDataToServerWS(min, max)
       key = "" + min + "-" + max
       waiting.set(key, resolve)
@@ -131,13 +132,13 @@ export function onNewMessage(message) {
   data.events.set(agentId, properties)
   timeEventsQueue.set(time, data.properties)
   //
-  minTime = Math.min(minTime, time)
-  maxTime = Math.max(maxTime, time)
+  minTime.next(Math.min(minTime.value, time))
+  maxTime.next(Math.max(maxTime.value, time))
 }
 
 export function onRemoveMessage (message) {
-  minTime = Math.min(minTime, time)
-  maxTime = Math.max(maxTime, time)
+  minTime.next(Math.min(minTime.value, time))
+  maxTime.next(Math.max(maxTime.value, time))
 }
 
 export function onUpdateMessage (message) {
@@ -157,8 +158,8 @@ export function onUpdateMessage (message) {
   data.events.set(agentId, properties)
   timeEventsQueue.set(time, data.events)
   //
-  minTime = Math.min(minTime, time)
-  maxTime = Math.max(maxTime, time)
+  minTime.next(Math.min(minTime.value, time))
+  maxTime.next(Math.max(maxTime.value, time))
 }
 
 export function onEndRequestMessage (message) {
@@ -176,9 +177,9 @@ export function onEndRequestMessage (message) {
       min = minTimeServer
     }*/
     if (message.hasOwnProperty('max')) {
-      minTimeServer = 0
-      maxTimeServer = message.max
-      max = maxTimeServer
+      minTimeServer.next(0)
+      maxTimeServer.next(message.max)
+      max = maxTimeServer.value
     }
     console.log('# Data End Request: [' + minRequired + ', ' + maxRequired + '] -> [' + min + ', ' + max + ']')
     let key = "" + minRequired + "-" + maxRequired

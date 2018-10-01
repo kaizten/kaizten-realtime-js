@@ -4,10 +4,11 @@ import {
   minTimeServer,
   maxTimeServer,
   timeEventsQueue
-} from './kaizten-data.js'
+} from './kaizten-store.js'
 import { randomPointInt } from './kaizten-maths.js'
 import { appContext } from './kaizten-simulation.js'
 import { TimelineMax } from 'gsap'
+import * as Rx from "rxjs"
 
 // Timeline
 export let timeline
@@ -15,25 +16,27 @@ export let timeline
 // time.
 export let tweenLabels
 // Minimum time with tween
-export let timeFirstTween
+export let timeFirstTween = new Rx.BehaviorSubject()
 // Maximum time with tween
-export let timeLastTween
+export let timeLastTween = new Rx.BehaviorSubject()
 // Minimum requested time to the server
-export let minRequestedTime
+export let minRequestedTime = new Rx.BehaviorSubject()
 // Maximum requested time to the server
-export let maxRequestedTime
+export let maxRequestedTime = new Rx.BehaviorSubject()
 // Increment in the time when new data are requested
 export const increment = 6000
 
 export function initialize () {
   tweenLabels.clear()
-  timeFirstTween = Number.POSITIVE_INFINITY
-  timeLastTween = Number.NEGATIVE_INFINITY
-  minRequestedTime = Number.POSITIVE_INFINITY
-  maxRequestedTime = Number.NEGATIVE_INFINITY
+  timeFirstTween.next(Number.POSITIVE_INFINITY)
+  timeLastTween.next(Number.NEGATIVE_INFINITY)
+  minRequestedTime.next(Number.POSITIVE_INFINITY)
+  maxRequestedTime.next(Number.NEGATIVE_INFINITY)
 }
 
 export function setUp() {
+  //console.log("Setup GSAP")
+  //console.log(appContext)
   timeline = new TimelineMax({
     paused: true,
     onUpdate: appContext.onUpdate,
@@ -45,11 +48,11 @@ export function setUp() {
 
 export function onUpdateTimeline () {
   let time = timeline.time() * 1000
-  if ((time + increment) >= maxRequestedTime) {
-    let minRequired = maxRequestedTime
+  if ((time + increment) >= maxRequestedTime.value) {
+    let minRequired = maxRequestedTime.value
     let maxRequired = minRequired + increment
-    if (maxTimeServer !== Number.NEGATIVE_INFINITY) {
-      maxRequired = Math.min(maxRequired, maxTimeServer)
+    if (maxTimeServer.value !== Number.NEGATIVE_INFINITY) {
+      maxRequired = Math.min(maxRequired, maxTimeServer.value)
     }
     if (minRequired <= maxRequired) {
       onPlay(minRequired, maxRequired)
@@ -59,8 +62,8 @@ export function onUpdateTimeline () {
 
 export function onPlay(minRequired, maxRequired) {
   console.log('# GSAP Start Request: [' + minRequired + ', ' + maxRequired + ']')
-  minRequestedTime = Math.min(minRequestedTime, minRequired)
-  maxRequestedTime = Math.max(maxRequestedTime, maxRequired)
+  minRequestedTime.next(Math.min(minRequestedTime.value, minRequired))
+  maxRequestedTime.next(Math.max(maxRequestedTime.value, maxRequired))
   let request = getDataInRange(minRequired, maxRequired)
   request.then((response) => {
     console.log('# GSAP End Request [' + minRequired + ', ' + maxRequired + '] -> [' + response.min + ', ' + response.max + ']: ' + response.records.length)
@@ -73,20 +76,20 @@ export function onPlay(minRequired, maxRequired) {
 
 export function appendRecordsToTimeline (records) {
   for (var i = 0; i < records.length; i++) {
-    let data = records[i]
-    let time = data.time
-    let type = data.type
-    let previousTime = data.previousTime
+    let record = records[i]
+    let time = record.time
+    let type = record.type
+    let previousTime = record.previousTime
     if (type === 'new') {
-      data.events.forEach(function (properties, agentId, mapObj) {
+      record.events.forEach(function (properties, agentId, mapObj) {
         appContext.onNewProperty(time, previousTime, agentId, properties)
       })
     } else if (type === 'update') {
-      data.events.forEach(function (properties, agentId, mapObj) {
+      record.events.forEach(function (properties, agentId, mapObj) {
         appContext.onUpdateProperty(time, previousTime, agentId, properties)
       })
     } else if (type === 'remove') {
-      data.events.forEach(function (properties, agentId, mapObj) {
+      record.events.forEach(function (properties, agentId, mapObj) {
         appContext.onRemoveProperty(time, previousTime, agentId, properties)
       })
     }
@@ -98,8 +101,8 @@ export function set(time, target, vars) {
   timeline.set(target, vars, label)
   let tweens = tweenLabels.has(label)? tweenLabels.get(label) + 1 : 1
   tweenLabels.set(label, tweens)
-  timeFirstTween = Math.min(timeFirstTween, time)
-  timeLastTween = Math.max(timeLastTween, time)
+  timeFirstTween.next(Math.min(timeFirstTween.value, time))
+  timeLastTween.next(Math.max(timeLastTween.value, time))
 }
 
 export function to(time, target, vars, duration) {
@@ -107,8 +110,8 @@ export function to(time, target, vars, duration) {
   timeline.to(target, duration, vars, label)
   let tweens = tweenLabels.has(label)? tweenLabels.get(label) + 1 : 1
   tweenLabels.set(label, tweens)
-  timeFirstTween = Math.min(timeFirstTween, time)
-  timeLastTween = Math.max(timeLastTween, time)
+  timeFirstTween.next(Math.min(timeFirstTween.value, time))
+  timeLastTween.next(Math.max(timeLastTween.value, time))
 }
 
 export function removeAtLabel (timeline, label) {

@@ -1,12 +1,14 @@
 import { 
   onSetUp 
-} from 'kaizten-realtime-js/src/kaizten-simulation'
+//} from 'kaizten-realtime-js/src/kaizten-simulation'
+} from '../kaizten-simulation'
 import {
   timeline,
   set,
   to
 //} from 'kaizten-gsap.js'
-} from 'kaizten-realtime-js/src/kaizten-gsap'
+//} from 'kaizten-realtime-js/src/kaizten-gsap'
+} from '../kaizten-gsap'
 import * as PIXI from 'pixi.js'
 
 export let STAGE_WIDTH = 800

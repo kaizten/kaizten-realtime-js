@@ -6,7 +6,8 @@ import {
   minTimeServer as serverMinTimeData,
   maxTimeServer as serverMaxTimeData
 //} from 'node_modules/kaizten-realtime-js/src/kaizten-realtime-js/kaizten-data'
-} from 'kaizten-realtime-js/src/kaizten-data'
+//} from 'kaizten-realtime-js/src/kaizten-data'
+} from '../kaizten-store'
 //} from 'kaizten-realtime-js/kaizten-data'
 //} from 'kaizten-realtime-js/kaizten-data.js'
 import {
@@ -22,7 +23,8 @@ import {
   timeline,
   onPlay
 //} from 'kaizten-realtime-js/kaizten-gsap.js'
-} from 'kaizten-realtime-js/src/kaizten-gsap'
+//} from 'kaizten-realtime-js/src/kaizten-gsap'
+} from '../kaizten-gsap'
 import {
   minRequiredTime,
   maxRequiredTime,
@@ -30,15 +32,18 @@ import {
   numberOfRemoveMessages,
   numberOfUpdateMessages
 //} from 'kaizten-realtime-js/kaizten-websockets.js'
-} from 'kaizten-realtime-js/src/kaizten-websockets'
+//} from 'kaizten-realtime-js/src/kaizten-websockets'
+} from '../kaizten-websockets'
 import { 
   appendNewChild 
 //} from 'kaizten-realtime-js/kaizten-dom.js'
-} from 'kaizten-realtime-js/src/kaizten-dom'
+//} from 'kaizten-realtime-js/src/kaizten-dom'
+} from '../kaizten-dom'
 import { 
   isDecimal 
 //} from 'kaizten-realtime-js/kaizten-maths.js'
-} from 'kaizten-realtime-js/src/kaizten-maths.js'
+//} from 'kaizten-realtime-js/src/kaizten-maths.js'
+} from '../kaizten-maths'
 
 // Data:
 let labelTime

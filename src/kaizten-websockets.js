@@ -4,27 +4,29 @@ import {
   onRemoveMessage,
   onEndRequestMessage,
   initialize as initializeData
-} from './kaizten-data.js'
+} from './kaizten-store.js'
 import {
-  appContext
+  appContext,
+  onInitialize
 } from './kaizten-simulation.js'
+import * as Rx from "rxjs"
 
 let webSocket
 let url
-export let minRequiredTime
-export let maxRequiredTime
-export let numberOfNewMessages
-export let numberOfUpdateMessages
-export let numberOfRemoveMessages
+export let minRequiredTime = new Rx.BehaviorSubject()
+export let maxRequiredTime = new Rx.BehaviorSubject()
+export let numberOfNewMessages = new Rx.BehaviorSubject()
+export let numberOfUpdateMessages = new Rx.BehaviorSubject()
+export let numberOfRemoveMessages = new Rx.BehaviorSubject()
 
 export function initialize () {
   if (!webSocket || webSocket.readyState !== 1) {
-    webSocket = new WebSocket(url, 'v10.stomp')
-    console.log("websocket: " + webSocket)
+    webSocket = new WebSocket(appContext.url, 'v10.stomp')
+    //console.log("websocket: " + webSocket)
     //webSocket = new WebSocket('ws://localhost:8181', 'v10.stomp')
-    // webSocket = new WebSocket("ws://192.168.1.35:8181", "v10.stomp");
-    // webSocket = new WebSocket("ws://10.209.3.94:8181", "v10.stomp");
-    // webSocket = new WebSocket("ws://10.209.3.94:8181", "v10.stomp");
+    //webSocket = new WebSocket("ws://192.168.1.35:8181", "v10.stomp");
+    //webSocket = new WebSocket("ws://10.209.3.94:8181", "v10.stomp");
+    //webSocket = new WebSocket("ws://10.209.3.94:8181", "v10.stomp");
     webSocket.addEventListener('message', onMessageHandler)
     webSocket.addEventListener('open', onOpenHandler)
     webSocket.addEventListener('close', onCloseHandler)
@@ -39,22 +41,22 @@ export function requestDataToServer (min, max) {
       maxRequiredTime: max
     })
   )
-  minRequiredTime = Math.min(minRequiredTime, min)
-  maxRequiredTime = Math.max(maxRequiredTime, max)
+  minRequiredTime.next(Math.min(minRequiredTime.value, min))
+  maxRequiredTime.next(Math.max(maxRequiredTime.value, max))
 }
 
-export function setUp (urlServer) {
-  url = urlServer
-  minRequiredTime = Number.POSITIVE_INFINITY
-  maxRequiredTime = Number.NEGATIVE_INFINITY
-  numberOfNewMessages = 0
-  numberOfUpdateMessages = 0
-  numberOfRemoveMessages = 0
+export function setUp () {
+  minRequiredTime.next(Number.POSITIVE_INFINITY)
+  maxRequiredTime.next(Number.NEGATIVE_INFINITY)
+  numberOfNewMessages.next(0)
+  numberOfUpdateMessages.next(0)
+  numberOfRemoveMessages.next(0)
 }
 
 function onOpenHandler () {
   initializeData()
   appContext.initialize()
+  onInitialize()
 }
 
 function onMessageHandler (e) {
@@ -62,17 +64,17 @@ function onMessageHandler (e) {
   let type = message.type
   switch (type) {
     case 'new':
-      numberOfNewMessages++
+      numberOfNewMessages.next(numberOfNewMessages.value + 1)
       onNewMessage(message)
       appContext.onNewAgentMessage(message)
       break
     case 'remove':
-      numberOfRemoveMessages++
+      numberOfRemoveMessages.next(numberOfRemoveMessages.value + 1)
       onRemoveMessage(message)
       appContext.onRemoveAgentMessage(message)
       break
     case 'update':
-      numberOfUpdateMessages++
+      numberOfUpdateMessages.next(numberOfUpdateMessages.value + 1)
       onUpdateMessage(message)
       appContext.onUpdateAgentMessage(message)
       break

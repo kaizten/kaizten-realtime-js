@@ -21,7 +21,8 @@ import {
   setUp as setUpGsap,
   onUpdateTimeline as onUpdateTimelineGsap
 //} from 'kaizten-gsap.js'
-} from 'kaizten-realtime-js/src/kaizten-gsap'
+//} from 'kaizten-realtime-js/src/kaizten-gsap'
+} from '../kaizten-gsap'
 
 export function initialize () {
   initializePixi()
@@ -65,4 +66,8 @@ export function handlerUpdateProperty (time, previousTime, id, properties) {
 export function onUpdateTimeline () {
   onUpdateTimelineGsap()
   //onUpdateTimelineUi()
+}
+
+export function onCompleteTimeline() {
+  console.log("FINISHED!!!")
 }
