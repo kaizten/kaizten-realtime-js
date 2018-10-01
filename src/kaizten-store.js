@@ -115,10 +115,10 @@ export function getDataInRange (min, max) {
 
 export function onNewMessage(message) {
   let time = message.time
-  let agent = message.agent
-  let agentId = agent.id
-  let properties = agent.properties
-  // console.log("ID=" + agentId + " PROPERTIES: " + JSON.stringify(properties))
+  let entity = message.entity
+  let entityId = entity.id
+  let properties = entity.properties
+  // console.log("ID=" + entityId + " PROPERTIES: " + JSON.stringify(properties))
   let data = getData(time)
   if (data == null) {
     data = {}
@@ -129,7 +129,7 @@ export function onNewMessage(message) {
     structure.push(data)
     //console.log("# New time: " + data.time + " previous: " + data.previousTime)
   }
-  data.events.set(agentId, properties)
+  data.events.set(entityId, properties)
   timeEventsQueue.set(time, data.properties)
   //
   minTime.next(Math.min(minTime.value, time))
@@ -143,7 +143,7 @@ export function onRemoveMessage (message) {
 
 export function onUpdateMessage (message) {
   let time = message.time
-  let agentId = message.change.id
+  let entityId = message.change.id
   let properties = message.change.properties
   let data = getData(time)
   if (data == null) {
@@ -155,7 +155,7 @@ export function onUpdateMessage (message) {
     structure.push(data)
     //console.log("# Update time: " + data.time + " previous: " + data.previousTime)
   }
-  data.events.set(agentId, properties)
+  data.events.set(entityId, properties)
   timeEventsQueue.set(time, data.events)
   //
   minTime.next(Math.min(minTime.value, time))

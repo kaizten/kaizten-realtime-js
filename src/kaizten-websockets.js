@@ -9,10 +9,9 @@ import {
   appContext,
   onInitialize
 } from './kaizten-simulation.js'
-import * as Rx from "rxjs"
+import * as Rx from 'rxjs'
 
 let webSocket
-let url
 export let minRequiredTime = new Rx.BehaviorSubject()
 export let maxRequiredTime = new Rx.BehaviorSubject()
 export let numberOfNewMessages = new Rx.BehaviorSubject()
@@ -24,9 +23,9 @@ export function initialize () {
     webSocket = new WebSocket(appContext.url, 'v10.stomp')
     //console.log("websocket: " + webSocket)
     //webSocket = new WebSocket('ws://localhost:8181', 'v10.stomp')
-    //webSocket = new WebSocket("ws://192.168.1.35:8181", "v10.stomp");
-    //webSocket = new WebSocket("ws://10.209.3.94:8181", "v10.stomp");
-    //webSocket = new WebSocket("ws://10.209.3.94:8181", "v10.stomp");
+    //webSocket = new WebSocket("ws://192.168.1.35:8181", "v10.stomp")
+    //webSocket = new WebSocket("ws://10.209.3.94:8181", "v10.stomp")
+    //webSocket = new WebSocket("ws://10.209.3.94:8181", "v10.stomp")
     webSocket.addEventListener('message', onMessageHandler)
     webSocket.addEventListener('open', onOpenHandler)
     webSocket.addEventListener('close', onCloseHandler)
@@ -66,23 +65,23 @@ function onMessageHandler (e) {
     case 'new':
       numberOfNewMessages.next(numberOfNewMessages.value + 1)
       onNewMessage(message)
-      appContext.onNewAgentMessage(message)
+      appContext.onNewMessage(message)
       break
     case 'remove':
       numberOfRemoveMessages.next(numberOfRemoveMessages.value + 1)
       onRemoveMessage(message)
-      appContext.onRemoveAgentMessage(message)
+      appContext.onRemoveMessage(message)
       break
     case 'update':
       numberOfUpdateMessages.next(numberOfUpdateMessages.value + 1)
       onUpdateMessage(message)
-      appContext.onUpdateAgentMessage(message)
+      appContext.onUpdateMessage(message)
       break
     case 'end-request':
       onEndRequestMessage(message)
       break
     default:
-      console.log('# ERROR: I have never heard of that shit!')
+      console.log('# ERROR: I have never heard of this!')
       console.log(message)
   }
 }

@@ -22,12 +22,12 @@ let Sprite = PIXI.Sprite
 let stage = new Container()
 let renderer
 let canvas
-export let agents
+export let entities
 
 export function initialize () { }
 
 export function setUp () {
-  agents = new Map()
+  entities = new Map()
   canvas = document.getElementById('canvas')
   var options = {
     view: canvas,
@@ -74,66 +74,66 @@ export function handlerRemoveMessage (message) { }
 export function handlerUpdateMessage (message) { }
 
 export function handlerNewProperty (time, previousTime, id, properties) {
-  // Nuevo agente
-  console.log("New Agent")
+  // New entity
+  console.log("New Entity")
   //
-  let agent = {}
-  agent.properties = properties
-  agent.sprite = newSprite('truck.png')
-  agent.sprite.anchor.x = 0.5
-  agent.sprite.anchor.y = 0.5
-  agent.sprite.width = 20
-  agent.sprite.height = 20
-  agents.set(id, agent)
+  let entity = {}
+  entity.properties = properties
+  entity.sprite = newSprite('truck.png')
+  entity.sprite.anchor.x = 0.5
+  entity.sprite.anchor.y = 0.5
+  entity.sprite.width = 20
+  entity.sprite.height = 20
+  entities.set(id, entity)
   // Propiedades adicionales
-  agent.sprite.rotation = 2 * Math.random() * Math.PI
+  entity.sprite.rotation = 2 * Math.random() * Math.PI
   // Añadir al stage
-  stage.addChild(agent.sprite)
+  stage.addChild(entity.sprite)
   // Actualizar timeline
   let newX = 0
   let newY = 0
   if (properties.hasOwnProperty('x')) {
     newX = properties.x
-    agent.sprite.x = newX
-    agent.properties.x = newX
+    entity.sprite.x = newX
+    entity.properties.x = newX
   }
   if (properties.hasOwnProperty('y')) {
     newY = properties.y
-    agent.sprite.y = newY
-    agent.properties.y = newY
+    entity.sprite.y = newY
+    entity.properties.y = newY
   }
   let newValues = {
     x: newX,
     y: newY,
-    rotation: agent.sprite.rotation
+    rotation: entity.sprite.rotation
   }
-  set(time, agent.sprite, newValues)
+  set(time, entity.sprite, newValues)
 }
 
 export function handlerRemoveProperty (time, previousTime, id, properties) { }
 
 export function handlerUpdateProperty (time, previousTime, id, properties) {
-  let agent = agents.get(id)
+  let entity = entities.get(id)
   // Actualizar timeline
-  let oldX = agent.properties.x
-  let oldY = agent.properties.y
+  let oldX = entity.properties.x
+  let oldY = entity.properties.y
   let newX = oldX
   let newY = oldY
   let vars = {}
   if (properties.hasOwnProperty('x')) {
     newX = properties.x
-    agent.properties.x = newX
+    entity.properties.x = newX
     vars.x = newX
   }
   if (properties.hasOwnProperty('y')) {
     newY = properties.y
-    agent.properties.y = newY
+    entity.properties.y = newY
     vars.y = newY
   }
   if (Object.keys(vars).length > 0) {
     let duration = (time - previousTime) / 1000.0
-    to(time, agent.sprite, vars, duration)
+    to(time, entity.sprite, vars, duration)
     let newRotation = Math.atan2(newY - oldY, newX - oldX)
-    set(time, agent.sprite, {rotation: newRotation})
+    set(time, entity.sprite, {rotation: newRotation})
   }
 }

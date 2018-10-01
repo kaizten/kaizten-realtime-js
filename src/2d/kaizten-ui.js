@@ -68,7 +68,7 @@ let labelProgress
 let listTweens
 let labelTweens
 //
-let listAgents
+let listEntities
 let labelNewMessages
 let listMessages
 let labelUpdateMessages
@@ -108,7 +108,7 @@ export function setUp () {
   //
   labelProgress = document.getElementById('labelProgress')
   //
-  listAgents = document.getElementById('listNewMessages')
+  listEntities = document.getElementById('listNewMessages')
   labelNewMessages = document.getElementById('labelNewMessages')
   listMessages = document.getElementById('listUpdateMessages')
   labelUpdateMessages = document.getElementById('labelUpdateMessages')
@@ -140,23 +140,23 @@ export function setUp () {
 
 export function handlerNewMessage (message) {
   let time = message.time
-  let agent = message.agent
+  let entity = message.entity
   let idLi = 'li_new_t' + time
   let idUl = 'ul_new_t' + time
   let idUlProperties = 'ul_new_t' + time
   let li = document.getElementById(idLi)
   if (li == null) {
-    li = appendNewChild(listAgents, 'li', 't=' + time, idLi)
+    li = appendNewChild(listEntities, 'li', 't=' + time, idLi)
     appendNewChild(li, 'ul', undefined, idUl)
   }
   let ul = document.getElementById(idUl)
-  let agentElement = appendNewChild(ul, 'li', 'id=' + agent.id, agent.id)
-  let ulProperties = appendNewChild(agentElement, 'ul', undefined, idUlProperties)
-  appendNewChild(ulProperties, 'li', 'x:' + agent.properties.x.toFixed(3))
-  appendNewChild(ulProperties, 'li', 'y:' + agent.properties.y.toFixed(3))
-  appendNewChild(ulProperties, 'li', 'width:' + agent.properties.width.toFixed(3))
-  appendNewChild(ulProperties, 'li', 'height:' + agent.properties.height.toFixed(3))
-  appendNewChild(ulProperties, 'li', 'color:' + agent.properties.color)
+  let entityElement = appendNewChild(ul, 'li', 'id=' + entity.id, entity.id)
+  let ulProperties = appendNewChild(entityElement, 'ul', undefined, idUlProperties)
+  appendNewChild(ulProperties, 'li', 'x:' + entity.properties.x.toFixed(3))
+  appendNewChild(ulProperties, 'li', 'y:' + entity.properties.y.toFixed(3))
+  appendNewChild(ulProperties, 'li', 'width:' + entity.properties.width.toFixed(3))
+  appendNewChild(ulProperties, 'li', 'height:' + entity.properties.height.toFixed(3))
+  appendNewChild(ulProperties, 'li', 'color:' + entity.properties.color)
   //
   updateStatistics()
 }
@@ -177,9 +177,9 @@ export function handlerUpdateMessage (message) {
     appendNewChild(li, 'ul', undefined, idUl)
   }
   let ul = document.getElementById(idUl)
-  let agentElement = appendNewChild(ul, 'li', 'id=' + id, id)
+  let entityElement = appendNewChild(ul, 'li', 'id=' + id, id)
   //
-  let ulProperties = appendNewChild(agentElement, 'ul', undefined, idUlProperties)
+  let ulProperties = appendNewChild(entityElement, 'ul', undefined, idUlProperties)
   for (var propertyName in properties) {
     // console.log(propertyName + ' -> ' + properties[propertyName])
     let text = '' + propertyName + ':'// + properties[propertyName]

@@ -81,16 +81,16 @@ export function appendRecordsToTimeline (records) {
     let type = record.type
     let previousTime = record.previousTime
     if (type === 'new') {
-      record.events.forEach(function (properties, agentId, mapObj) {
-        appContext.onNewProperty(time, previousTime, agentId, properties)
+      record.events.forEach(function (properties, entityId, mapObj) {
+        appContext.onNewProperty(time, previousTime, entityId, properties)
       })
     } else if (type === 'update') {
-      record.events.forEach(function (properties, agentId, mapObj) {
-        appContext.onUpdateProperty(time, previousTime, agentId, properties)
+      record.events.forEach(function (properties, entityId, mapObj) {
+        appContext.onUpdateProperty(time, previousTime, entityId, properties)
       })
     } else if (type === 'remove') {
-      record.events.forEach(function (properties, agentId, mapObj) {
-        appContext.onRemoveProperty(time, previousTime, agentId, properties)
+      record.events.forEach(function (properties, entityId, mapObj) {
+        appContext.onRemoveProperty(time, previousTime, entityId, properties)
       })
     }
   }
