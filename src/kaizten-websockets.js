@@ -3,7 +3,7 @@ import {
   onUpdateMessage,
   onRemoveMessage,
   onEndRequestMessage,
-  initialize as initializeData
+  initialize as initializeStore
 } from './kaizten-store.js'
 import {
   appContext,
@@ -53,7 +53,7 @@ export function setUp () {
 }
 
 function onOpenHandler () {
-  initializeData()
+  initializeStore()
   appContext.initialize()
   onInitialize()
 }
