@@ -3,6 +3,8 @@ import {
 } from './kaizten-websockets.js'
 import * as Rx from "rxjs"
 
+
+
 export let timeEventsQueue
 export let structure
 
@@ -23,6 +25,8 @@ export let requests
 // min-max -> resolve
 export let waiting
 
+
+
 export function initialize () {
   timeEventsQueue = new Map()
   structure = []
@@ -38,9 +42,7 @@ export function initialize () {
   maxTimeServer.next(Number.NEGATIVE_INFINITY)
 }
 
-export function setUp () {
-
-}
+export function setUp () { }
 
 export function printEvents () {
   for (var [key, value] of timeEventsQueue) {

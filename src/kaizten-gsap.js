@@ -1,14 +1,12 @@
 import {
-  getData,
   getDataInRange,
-  minTimeServer,
   maxTimeServer,
-  timeEventsQueue
 } from './kaizten-store.js'
-import { randomPointInt } from './kaizten-maths.js'
 import { appContext } from './kaizten-simulation.js'
 import { TimelineMax } from 'gsap'
 import * as Rx from "rxjs"
+
+
 
 // Timeline
 export let timeline
@@ -25,6 +23,8 @@ export let minRequestedTime = new Rx.BehaviorSubject()
 export let maxRequestedTime = new Rx.BehaviorSubject()
 // Increment in the time when new data are requested
 export const increment = 6000
+
+
 
 export function initialize () {
   tweenLabels.clear()

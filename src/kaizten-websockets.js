@@ -11,12 +11,16 @@ import {
 } from './kaizten-simulation.js'
 import * as Rx from 'rxjs'
 
+
+
 let webSocket
 export let minRequiredTime = new Rx.BehaviorSubject()
 export let maxRequiredTime = new Rx.BehaviorSubject()
 export let numberOfNewMessages = new Rx.BehaviorSubject()
 export let numberOfUpdateMessages = new Rx.BehaviorSubject()
 export let numberOfRemoveMessages = new Rx.BehaviorSubject()
+
+
 
 export function initialize () {
   if (!webSocket || webSocket.readyState !== 1) {
