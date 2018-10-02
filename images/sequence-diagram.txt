@@ -1,22 +1,19 @@
 participant html
-participant simulator
-participant ws
-participant store
+participant kaizten-simulation
+participant kaizten-websockets
+participant kaizten-store
 participant app
 
-html ->+ simulator: setUp
-simulator -> ws: setUp
-simulator -> store: setUp
-simulator -> app: setUp
+html ->+ kaizten-simulation: setUp
+kaizten-simulation -> kaizten-websockets: setUp
+kaizten-simulation -> kaizten-store: setUp
+kaizten-simulation -> app: setUp
 
-app -> simulator: onSetUp
+app -> kaizten-simulation: onSetUp
 
-simulator ->+ ws: initialize
+kaizten-simulation ->+ kaizten-websockets: initialize
 
-ws -> store: initialize
-ws -> app: initialize
+kaizten-websockets -> kaizten-store: initialize
+kaizten-websockets -> app: initialize
 
-ws -> simulator: onInitialize
-
-
-
+kaizten-websockets -> kaizten-simulation: onInitialize
