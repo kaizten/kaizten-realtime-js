@@ -1,10 +1,6 @@
-import {
-  getDataInRange,
-  maxTimeServer,
-} from './kaizten-store.js'
 import { appContext } from './kaizten-simulation.js'
 import { TimelineMax } from 'gsap'
-import * as Rx from "rxjs"
+import * as Rx from 'rxjs'
 
 
 
@@ -51,8 +47,9 @@ export function onUpdateTimeline () {
   if ((time + increment) >= maxRequestedTime.value) {
     let minRequired = maxRequestedTime.value
     let maxRequired = minRequired + increment
-    if (maxTimeServer.value !== Number.NEGATIVE_INFINITY) {
-      maxRequired = Math.min(maxRequired, maxTimeServer.value)
+    let maxTimeServer = appContext.orm.getMaxTimeServer().value
+    if (maxTimeServer !== Number.NEGATIVE_INFINITY) {
+      maxRequired = Math.min(maxRequired, maxTimeServer)
     }
     if (minRequired <= maxRequired) {
       onPlay(minRequired, maxRequired)
@@ -64,7 +61,8 @@ export function onPlay(minRequired, maxRequired) {
   console.log('# GSAP Start Request: [' + minRequired + ', ' + maxRequired + ']')
   minRequestedTime.next(Math.min(minRequestedTime.value, minRequired))
   maxRequestedTime.next(Math.max(maxRequestedTime.value, maxRequired))
-  let request = getDataInRange(minRequired, maxRequired)
+  let request = appContext.orm.get(minRequired, maxRequired)
+  //let request = getDataInRange(minRequired, maxRequired)
   request.then((response) => {
     console.log('# GSAP End Request [' + minRequired + ', ' + maxRequired + '] -> [' + response.min + ', ' + response.max + ']: ' + response.records.length)
     appendRecordsToTimeline(response.records)

@@ -6,7 +6,7 @@ import {
   to
 } from '../kaizten-gsap'
 import { 
-  onSetUp 
+  onSetUp
 } from '../kaizten-simulation'
 import * as PIXI from 'pixi.js'
 
@@ -90,7 +90,7 @@ export function handlerNewProperty (time, previousTime, id, properties) {
     entity.sprite.width = 20
     entity.sprite.height = 20
     entities.set(id, entity)
-    // Propiedades adicionales
+    // Additional properties
     entity.sprite.rotation = 2 * Math.random() * Math.PI
     // Añadir al stage
     stage.addChild(entity.sprite)
@@ -112,6 +112,7 @@ export function handlerNewProperty (time, previousTime, id, properties) {
       y: newY,
       rotation: entity.sprite.rotation
     }
+    // Update timeline
     set(time, entity.sprite, newValues)
 }
 
@@ -135,6 +136,7 @@ export function handlerUpdateProperty (time, previousTime, id, properties) {
     entity.properties.y = newY
     vars.y = newY
   }
+  // Update timeline
   if (Object.keys(vars).length > 0) {
     let duration = (time - previousTime) / 1000.0
     to(time, entity.sprite, vars, duration)

@@ -1,11 +1,4 @@
 import {
-  onNewMessage,
-  onUpdateMessage,
-  onRemoveMessage,
-  onEndRequestMessage,
-  initialize as initializeStore
-} from './kaizten-store.js'
-import {
   appContext,
   onInitialize
 } from './kaizten-simulation.js'
@@ -26,7 +19,6 @@ export function initialize () {
   if (!webSocket || webSocket.readyState !== 1) {
     webSocket = new WebSocket(appContext.url, 'v10.stomp')
     //console.log("websocket: " + webSocket)
-    //webSocket = new WebSocket('ws://localhost:8181', 'v10.stomp')
     //webSocket = new WebSocket("ws://192.168.1.35:8181", "v10.stomp")
     //webSocket = new WebSocket("ws://10.209.3.94:8181", "v10.stomp")
     //webSocket = new WebSocket("ws://10.209.3.94:8181", "v10.stomp")
@@ -37,6 +29,7 @@ export function initialize () {
 }
 
 export function requestDataToServer (min, max) {
+  //console.log('# WS Start Request: [' + min + ', ' + max + ']')
   webSocket.send(
     JSON.stringify({
       type: 'request',
@@ -57,7 +50,6 @@ export function setUp () {
 }
 
 function onOpenHandler () {
-  initializeStore()
   appContext.initialize()
   onInitialize()
 }
@@ -68,21 +60,36 @@ function onMessageHandler (e) {
   switch (type) {
     case 'new':
       numberOfNewMessages.next(numberOfNewMessages.value + 1)
-      onNewMessage(message)
+      appContext.orm.newEntity(
+        message.time, 
+        message.entity.id, 
+        message.entity.properties)
       appContext.onNewMessage(message)
       break
     case 'remove':
       numberOfRemoveMessages.next(numberOfRemoveMessages.value + 1)
-      onRemoveMessage(message)
+      appContext.orm.removeEntity(
+        message.time, 
+        message.entity.id)
       appContext.onRemoveMessage(message)
       break
     case 'update':
       numberOfUpdateMessages.next(numberOfUpdateMessages.value + 1)
-      onUpdateMessage(message)
+      appContext.orm.updateEntity(
+        message.time, 
+        message.change.id, 
+        message.change.properties)
       appContext.onUpdateMessage(message)
       break
     case 'end-request':
-      onEndRequestMessage(message)
+      console.log("# end request")
+      appContext.orm.onEndRequestMessage(
+        message.minRequired,
+        message.maxRequired,
+        message.min,
+        message.max,
+        message.error
+      )
       break
     default:
       console.log('# ERROR: I have never heard of this!')

@@ -1,11 +1,8 @@
 import {
-  setUp as setUpData
-} from './kaizten-store.js'
-import {
   initialize as initializeWS,
   setUp as setUpWebSockets
 } from './kaizten-websockets.js'
-import * as Rx from "rxjs";
+import * as Rx from 'rxjs'
 
 
 
@@ -18,12 +15,16 @@ export function setUp(context) {
   status.next('not ready')
   appContext = context
   setUpWebSockets()
-  setUpData()
+  /* */
+  appContext.orm.setUp()
+  /* */
+  //setUpData()
   appContext.setUp()
 }
 
 export function onSetUp() {
   initializeWS()
+  appContext.orm.initialize()
 }
 
 export function onInitialize() {

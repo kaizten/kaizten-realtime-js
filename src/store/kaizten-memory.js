@@ -1,7 +1,7 @@
 import {
   requestDataToServer as requestDataToServerWS,
-} from './kaizten-websockets.js'
-import * as Rx from "rxjs"
+} from '../kaizten-websockets.js'
+import * as Rx from 'rxjs'
 
 
 
@@ -24,6 +24,15 @@ export let maxTimeServer = new Rx.BehaviorSubject()
 export let requests
 // min-max -> resolve
 export let waiting
+
+function getData (time) {
+  for (let i = 0; i < structure.length; i++) {
+    if (structure[i].time === time) {
+      return structure[i]
+    }
+  }
+  return null
+}
 
 
 
@@ -55,14 +64,7 @@ export function printEvents () {
   }
 }
 
-export function getData (time) {
-  for (let i = 0; i < structure.length; i++) {
-    if (structure[i].time === time) {
-      return structure[i]
-    }
-  }
-  return null
-}
+
 
 /*
 It provides a promise to be resolved when the data are available. In that case
@@ -115,12 +117,7 @@ export function getDataInRange (min, max) {
   return promise
 }
 
-export function onNewMessage(message) {
-  let time = message.time
-  let entity = message.entity
-  let entityId = entity.id
-  let properties = entity.properties
-  // console.log("ID=" + entityId + " PROPERTIES: " + JSON.stringify(properties))
+export function newEntity (time, entityId, properties) {
   let data = getData(time)
   if (data == null) {
     data = {}
@@ -133,20 +130,16 @@ export function onNewMessage(message) {
   }
   data.events.set(entityId, properties)
   timeEventsQueue.set(time, data.properties)
-  //
   minTime.next(Math.min(minTime.value, time))
   maxTime.next(Math.max(maxTime.value, time))
 }
 
-export function onRemoveMessage (message) {
-  minTime.next(Math.min(minTime.value, time))
-  maxTime.next(Math.max(maxTime.value, time))
+export function removeEntity (time, id) {
+  //minTime.next(Math.min(minTime.value, time))
+  //maxTime.next(Math.max(maxTime.value, time))
 }
 
-export function onUpdateMessage (message) {
-  let time = message.time
-  let entityId = message.change.id
-  let properties = message.change.properties
+export function updateEntity (time, entityId, properties) {
   let data = getData(time)
   if (data == null) {
     data = {}
@@ -155,33 +148,22 @@ export function onUpdateMessage (message) {
     data.previousTime = (structure.length > 0)? structure[structure.length - 1].time : -1
     data.events = new Map()
     structure.push(data)
-    //console.log("# Update time: " + data.time + " previous: " + data.previousTime)
   }
   data.events.set(entityId, properties)
   timeEventsQueue.set(time, data.events)
-  //
   minTime.next(Math.min(minTime.value, time))
   maxTime.next(Math.max(maxTime.value, time))
 }
 
-export function onEndRequestMessage (message) {
-  let minRequired = message.minRequired
-  let maxRequired = message.maxRequired
-  //let min = message.min
-  //let max = message.max
-  //minTimeServer = Math.min(minTimeServer, message.min)
-  //maxTimeServer = Math.max(maxTimeServer, message.max)
-  if (!message.hasOwnProperty('error')) {
-    let min = message.minRequired
-    let max = message.maxRequired
-    /*if (message.hasOwnProperty('min')) {
-      minTimeServer = message.min
-      min = minTimeServer
-    }*/
-    if (message.hasOwnProperty('max')) {
+export function onEndRequestMessage (minRequired, maxRequired, min, max, error) {
+  if (error === undefined) {
+    min = minRequired
+    if (max !== undefined) {
       minTimeServer.next(0)
-      maxTimeServer.next(message.max)
+      maxTimeServer.next(max)
       max = maxTimeServer.value
+    } else {
+      max = maxRequired
     }
     console.log('# Data End Request: [' + minRequired + ', ' + maxRequired + '] -> [' + min + ', ' + max + ']')
     let key = "" + minRequired + "-" + maxRequired
@@ -203,7 +185,6 @@ export function onEndRequestMessage (message) {
     waiting.delete(key)
     resolve(response)
   } else {
-    let error = message.error
     console.log('# End request: there was an error [' + minRequired + ', ' + maxRequired + '] -> [' + min + ', ' + max + ']')
   }
 }
