@@ -25,15 +25,6 @@ export let requests
 // min-max -> resolve
 export let waiting
 
-function getData (time) {
-  for (let i = 0; i < structure.length; i++) {
-    if (structure[i].time === time) {
-      return structure[i]
-    }
-  }
-  return null
-}
-
 
 
 export function initialize () {
@@ -53,7 +44,7 @@ export function initialize () {
 
 export function setUp () { }
 
-export function printEvents () {
+export function log () {
   for (var [key, value] of timeEventsQueue) {
     console.log(key)
     for (var [key2, value2] of value) {
@@ -62,6 +53,17 @@ export function printEvents () {
       // console.dir(value2.properties);
     }
   }
+}
+
+
+
+export function getData (time) {
+  for (let i = 0; i < structure.length; i++) {
+    if (structure[i].time === time) {
+      return structure[i]
+    }
+  }
+  return null
 }
 
 
