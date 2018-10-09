@@ -1,4 +1,4 @@
-import { utils } from 'js-data'
+//import { utils } from 'js-data'
 import { KaiztenAdapter } from './kaizten-adapter'
 import {
     onEndRequestMessage,
@@ -43,7 +43,7 @@ function queueTask (task) {
 }
 
 function createTask (fn) {
-    return new Promise(fn).then(function (result) {
+    /*return new Promise(fn).then(function (result) {
         taskInProcess = false
         queue.shift()
         setTimeout(dequeue, 0)
@@ -53,6 +53,18 @@ function createTask (fn) {
         queue.shift()
         setTimeout(dequeue, 0)
         return utils.reject(err)
+    })*/
+    return new Promise(fn).then(function (result) {
+        taskInProcess = false
+        queue.shift()
+        setTimeout(dequeue, 0)
+        return result
+    }, function (err) {
+        taskInProcess = false
+        queue.shift()
+        setTimeout(dequeue, 0)
+        //return utils.reject(err)
+        return Promise.resolve(err)
     })
 }
 
