@@ -1,31 +1,30 @@
 import {
-  appContext,
-  onInitialize
+  appContext
 } from './kaizten-simulation.js'
 import * as Rx from 'rxjs'
 
-
-
 let webSocket
+let apps
+let resolveInitialization
 export let minRequiredTime = new Rx.BehaviorSubject()
 export let maxRequiredTime = new Rx.BehaviorSubject()
 export let numberOfNewMessages = new Rx.BehaviorSubject()
 export let numberOfUpdateMessages = new Rx.BehaviorSubject()
 export let numberOfRemoveMessages = new Rx.BehaviorSubject()
 
-
-
 export function initialize () {
+  let promise = new Promise((resolve, reject) => {
   if (!webSocket || webSocket.readyState !== 1) {
-    webSocket = new WebSocket(appContext.url, 'v10.stomp')
-    //console.log("websocket: " + webSocket)
-    //webSocket = new WebSocket("ws://192.168.1.35:8181", "v10.stomp")
-    //webSocket = new WebSocket("ws://10.209.3.94:8181", "v10.stomp")
-    //webSocket = new WebSocket("ws://10.209.3.94:8181", "v10.stomp")
-    webSocket.addEventListener('message', onMessageHandler)
-    webSocket.addEventListener('open', onOpenHandler)
-    webSocket.addEventListener('close', onCloseHandler)
-  }
+      resolveInitialization = resolve
+      webSocket = new WebSocket(appContext.url, 'v10.stomp')
+      //console.log("websocket: " + webSocket)
+      //webSocket = new WebSocket("ws://192.168.1.35:8181", "v10.stomp")
+      webSocket.addEventListener('open', onOpenHandler)
+      webSocket.addEventListener('close', onCloseHandler)
+      webSocket.addEventListener('message', onMessageHandler)      
+    }
+  })
+  return promise
 }
 
 export function requestDataToServer (min, max) {
@@ -47,11 +46,11 @@ export function setUp () {
   numberOfNewMessages.next(0)
   numberOfUpdateMessages.next(0)
   numberOfRemoveMessages.next(0)
+  apps = appContext.apps
 }
 
 function onOpenHandler () {
-  appContext.initialize()
-  onInitialize()
+  resolveInitialization()
 }
 
 function onMessageHandler (e) {
@@ -64,14 +63,18 @@ function onMessageHandler (e) {
         message.time, 
         message.entity.id, 
         message.entity.properties)
-      appContext.onNewMessage(message)
+      for (let i = 0; i < apps.length; i++) {
+        apps[i].onNewMessage(message)
+      }
       break
     case 'remove':
       numberOfRemoveMessages.next(numberOfRemoveMessages.value + 1)
       appContext.orm.removeEntity(
         message.time, 
         message.entity.id)
-      appContext.onRemoveMessage(message)
+      for (let i = 0; i < apps.length; i++) {
+        apps[i].onRemoveMessage(message)
+      }
       break
     case 'update':
       numberOfUpdateMessages.next(numberOfUpdateMessages.value + 1)
@@ -79,7 +82,9 @@ function onMessageHandler (e) {
         message.time, 
         message.change.id, 
         message.change.properties)
-      appContext.onUpdateMessage(message)
+      for (let i = 0; i < apps.length; i++) {
+        apps[i].onUpdateMessage(message)
+      }
       break
     case 'end-request':
       console.log("# end request")

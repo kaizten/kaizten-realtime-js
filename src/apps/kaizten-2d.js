@@ -1,13 +1,8 @@
 import {
-  initialize as initializeGsap,
-  setUp as setUpGsap,
   onUpdateTimeline as onUpdateTimelineGsap,
   set,
   to
-} from '../kaizten-gsap'
-import { 
-  onSetUp
-} from '../kaizten-simulation'
+} from './kaizten-gsap'
 import * as PIXI from 'pixi.js'
 
 
@@ -50,30 +45,29 @@ export function gameLoop () {
   renderer.render(stage)
 }
 
-
-
 export function setUp () {
-  entities = new Map()
-  canvas = document.getElementById('canvas')
-  var options = {
-    view: canvas,
-    transparent: true,
-    resolution: 1
-  }
-  renderer = autoDetectRenderer(STAGE_WIDTH, STAGE_HEIGHT, options)
-  renderer.view.style.border = '1px dashed black'
-  loader
-    .add('truck.png')
-    .on('progress')
-    //.on('progress', loadProgressHandler)
-    .load(onSetUp)
-  gameLoop()
-  setUpGsap()
+  let promise = new Promise((resolve, reject) => {
+    console.log("setup 2d")
+    entities = new Map()
+    canvas = document.getElementById('canvas')
+    var options = {
+      view: canvas,
+      transparent: true,
+      resolution: 1
+    }
+    renderer = autoDetectRenderer(STAGE_WIDTH, STAGE_HEIGHT, options)
+    renderer.view.style.border = '1px dashed black'
+    loader
+      .add('truck.png')
+      .on('progress')
+      //.on('progress', loadProgressHandler)
+      .load(resolve)
+    gameLoop()
+  })
+  return promise
 }
 
-export function initialize () {
-  initializeGsap()
-}
+export function initialize () { }
 
 export function handlerNewMessage (message) { }
 
@@ -147,12 +141,4 @@ export function handlerUpdateProperty (time, previousTime, id, properties) {
 
 export function onUpdateTimeline () {
   onUpdateTimelineGsap()
-}
-
-export function onCompleteTimeline() {
-  console.log("FINISHED!!!")
-}
-
-export function onReverseCompleteTimeline() {
-  console.log("REVERSED FINISHED!!!")
 }

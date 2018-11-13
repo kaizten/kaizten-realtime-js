@@ -1,9 +1,11 @@
-import { appContext } from './kaizten-simulation.js'
+import { 
+  appContext,
+} from '../kaizten-simulation.js'
 import { TimelineMax } from 'gsap'
 import * as Rx from 'rxjs'
 
-
-
+let app
+let apps
 // Timeline
 export let timeline
 // Map whose key is a time with tween and its value is the set of tweens in that
@@ -20,26 +22,54 @@ export let maxRequestedTime = new Rx.BehaviorSubject()
 // Increment in the time when new data are requested
 export const increment = 6000
 
-
-
 export function initialize () {
-  tweenLabels.clear()
-  timeFirstTween.next(Number.POSITIVE_INFINITY)
-  timeLastTween.next(Number.NEGATIVE_INFINITY)
-  minRequestedTime.next(Number.POSITIVE_INFINITY)
-  maxRequestedTime.next(Number.NEGATIVE_INFINITY)
+  let promise = new Promise((resolve, reject) => {
+    console.log("initialize gsap")
+    tweenLabels.clear()
+    timeFirstTween.next(Number.POSITIVE_INFINITY)
+    timeLastTween.next(Number.NEGATIVE_INFINITY)
+    minRequestedTime.next(Number.POSITIVE_INFINITY)
+    maxRequestedTime.next(Number.NEGATIVE_INFINITY)
+    const promisesInitialize = []    
+    if (apps) {
+      for (let i = 0; i < apps.length; i++) {
+        let app = apps[i]
+        let promiseChild = app.initialize()
+        promisesInitialize.push(promiseChild)
+      }
+    }
+    Promise.all(promisesInitialize).then(resolve)
+  })
+  return promise
 }
 
-export function setUp() {
-  //console.log("Setup GSAP")
-  //console.log(appContext)
+export function setUp(thisApp) {
+  console.log("set up gsap")
+  app = thisApp
+  apps = thisApp.apps
   timeline = new TimelineMax({
     paused: true,
-    onUpdate: appContext.onUpdate,
-    onComplete: appContext.onComplete,
-    onReverseComplete: appContext.onReverseComplete
+    //onUpdate: appContext.onUpdate,
+    //onUpdate: onUpdateTimeline,
+    onUpdate: app.onUpdate,
+    //onComplete: appContext.onComplete,
+    onComplete: onCompleteTimeline,
+    //onReverseComplete: appContext.onReverseComplete
+    onReverseComplete: onReverseCompleteTimeline
   })
-  tweenLabels = new Map()
+  tweenLabels = new Map()  
+  let promise = new Promise((resolve, reject) => {
+    const promisesSetUp = []    
+    if (apps) {
+      for (let i = 0; i < apps.length; i++) {
+        let app = apps[i]
+        let promiseChild = app.setUp() // HAY QUE PASAR LA APP
+        promisesSetUp.push(promiseChild)
+      }
+    }
+    Promise.all(promisesSetUp).then(resolve)    
+  })
+  return promise
 }
 
 export function onUpdateTimeline () {
@@ -80,15 +110,21 @@ export function appendRecordsToTimeline (records) {
     let previousTime = record.previousTime
     if (type === 'new') {
       record.events.forEach(function (properties, entityId, mapObj) {
-        appContext.onNewProperty(time, previousTime, entityId, properties)
+        for (let i = 0; i < apps.length; i++) {
+          apps[i].onNewProperty(time, previousTime, entityId, properties)
+        }
       })
     } else if (type === 'update') {
       record.events.forEach(function (properties, entityId, mapObj) {
-        appContext.onUpdateProperty(time, previousTime, entityId, properties)
+        for (let i = 0; i < apps.length; i++) {
+          apps[i].onUpdateProperty(time, previousTime, entityId, properties)
+        }
       })
     } else if (type === 'remove') {
       record.events.forEach(function (properties, entityId, mapObj) {
-        appContext.onRemoveProperty(time, previousTime, entityId, properties)
+        for (let i = 0; i < apps.length; i++) {
+          apps[i].onRemoveProperty(time, previousTime, entityId, properties)
+        }
       })
     }
   }
@@ -147,4 +183,39 @@ function logStart () {
 
 function logFinish () {
   console.log('Finishing animation at ' + new Date().getTime())
+}
+
+export function handlerNewMessage (message) { 
+  if (apps) {
+    for (let i = 0; i < apps.length; i++) {
+      let app = apps[i]
+      app.onNewMessage()
+    }
+  }
+}
+
+export function handlerRemoveMessage (message) { 
+  if (apps) {
+    for (let i = 0; i < apps.length; i++) {
+      let app = apps[i]
+      app.onRemoveMessage()
+    }
+  }
+}
+
+export function handlerUpdateMessage (message) { 
+  if (apps) {
+    for (let i = 0; i < apps.length; i++) {
+      let app = apps[i]
+      app.onUpdateMessage()
+    }
+  }
+}
+
+export function onCompleteTimeline() {
+  console.log("FINISHED!!!")
+}
+
+export function onReverseCompleteTimeline() {
+  console.log("REVERSED FINISHED!!!")
 }

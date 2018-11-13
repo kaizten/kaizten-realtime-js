@@ -28,18 +28,22 @@ export let waiting
 
 
 export function initialize () {
-  timeEventsQueue = new Map()
-  structure = []
-  //
-  requests = new Map()
-  waiting = new Map()
-  //
-  minTime.next(Number.POSITIVE_INFINITY)
-  maxTime.next(Number.NEGATIVE_INFINITY)
-  minRequestedTime.next(Number.POSITIVE_INFINITY)
-  maxRequestedTime.next(Number.NEGATIVE_INFINITY)
-  minTimeServer.next(Number.POSITIVE_INFINITY)
-  maxTimeServer.next(Number.NEGATIVE_INFINITY)
+  let promise = new Promise((resolve, reject) => {
+    timeEventsQueue = new Map()
+    structure = []
+    //
+    requests = new Map()
+    waiting = new Map()
+    //
+    minTime.next(Number.POSITIVE_INFINITY)
+    maxTime.next(Number.NEGATIVE_INFINITY)
+    minRequestedTime.next(Number.POSITIVE_INFINITY)
+    maxRequestedTime.next(Number.NEGATIVE_INFINITY)
+    minTimeServer.next(Number.POSITIVE_INFINITY)
+    maxTimeServer.next(Number.NEGATIVE_INFINITY)
+    resolve()
+  })
+  return promise
 }
 
 export function setUp () { }
