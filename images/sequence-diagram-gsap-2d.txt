@@ -1,0 +1,19 @@
+participant html
+participant kaizten-simulation
+participant kaizten-websockets
+participant kaizten-store
+participant kaizten-gsap
+participant kaizten-2d
+
+html ->+ kaizten-simulation: setUp
+kaizten-simulation -> kaizten-websockets: setUp
+kaizten-simulation -> kaizten-store: setUp
+kaizten-simulation -> kaizten-gsap: setUp
+kaizten-gsap -> kaizten-2d: setUp
+
+kaizten-simulation -> kaizten-websockets: initialize
+kaizten-simulation -> kaizten-store: initialize
+kaizten-simulation -> kaizten-gsap: initialize
+kaizten-gsap -> kaizten-2d: initialize
+
+kaizten-simulation --> html: ready
