@@ -9,11 +9,8 @@ kaizten-simulation -> kaizten-websockets: setUp
 kaizten-simulation -> kaizten-store: setUp
 kaizten-simulation -> app: setUp
 
-app -> kaizten-simulation: onSetUp
+kaizten-simulation -> kaizten-websockets: initialize
+kaizten-simulation -> kaizten-store: initialize
+kaizten-simulation -> app: initialize
 
-kaizten-simulation ->+ kaizten-websockets: initialize
-
-kaizten-websockets -> kaizten-store: initialize
-kaizten-websockets -> app: initialize
-
-kaizten-websockets -> kaizten-simulation: onInitialize
+kaizten-simulation --> html: ready
