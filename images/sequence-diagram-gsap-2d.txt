@@ -1,19 +1,32 @@
 participant html
 participant kaizten-simulation
 participant kaizten-websockets
-participant kaizten-store
+participant kaizten-orm
 participant kaizten-gsap
 participant kaizten-2d
 
+kaizten-simulation --> html: not-ready
+
 html ->+ kaizten-simulation: setUp
 kaizten-simulation -> kaizten-websockets: setUp
-kaizten-simulation -> kaizten-store: setUp
+kaizten-simulation -> kaizten-orm: setUp
 kaizten-simulation -> kaizten-gsap: setUp
 kaizten-gsap -> kaizten-2d: setUp
 
-kaizten-simulation -> kaizten-websockets: initialize
-kaizten-simulation -> kaizten-store: initialize
+kaizten-simulation -> kaizten-orm: initialize
 kaizten-simulation -> kaizten-gsap: initialize
 kaizten-gsap -> kaizten-2d: initialize
 
-kaizten-simulation --> html: ready
+kaizten-simulation -->-html: ready
+
+html ->+ kaizten-simulation: connect
+kaizten-simulation -> kaizten-websockets: connect
+kaizten-simulation -->-html: connected
+
+kaizten-gsap ->+kaizten-simulation: get
+kaizten-simulation ->+ kaizten-websockets: get
+kaizten-websockets ->- kaizten-simulation: data
+kaizten-simulation -> kaizten-orm: data
+kaizten-simulation-->-kaizten-gsap: data
+
+
