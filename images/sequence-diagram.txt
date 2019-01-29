@@ -1,16 +1,26 @@
 participant html
 participant kaizten-simulation
 participant kaizten-websockets
-participant kaizten-store
+participant kaizten-orm
 participant app
+
+kaizten-simulation --> html: not-ready
 
 html ->+ kaizten-simulation: setUp
 kaizten-simulation -> kaizten-websockets: setUp
-kaizten-simulation -> kaizten-store: setUp
+kaizten-simulation -> kaizten-orm: setUp
 kaizten-simulation -> app: setUp
 
-kaizten-simulation -> kaizten-websockets: initialize
-kaizten-simulation -> kaizten-store: initialize
+app --> kaizten-simulation: onSetUp
+
+kaizten-simulation -> kaizten-orm: initialize
 kaizten-simulation -> app: initialize
 
+app --> kaizten-simulation: onInitialize
+
 kaizten-simulation --> html: ready
+
+html ->+ kaizten-simulation: connect
+kaizten-simulation -> kaizten-websockets: connect
+
+kaizten-simulation --> html: connected
