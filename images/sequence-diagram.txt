@@ -11,12 +11,8 @@ kaizten-simulation -> kaizten-websockets: setUp
 kaizten-simulation -> kaizten-orm: setUp
 kaizten-simulation -> app: setUp
 
-app --> kaizten-simulation: onSetUp
-
 kaizten-simulation -> kaizten-orm: initialize
 kaizten-simulation -> app: initialize
-
-app --> kaizten-simulation: onInitialize
 
 kaizten-simulation --> html: ready
 
