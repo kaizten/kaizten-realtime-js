@@ -1,7 +1,35 @@
-import * as Rx from 'rxjs'
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: kaizten-memory.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: kaizten-memory.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import * as Rx from 'rxjs'
 
 /**
- * xxx
+ * safdasfd
  */
 export class KaiztenMemory {
 
@@ -30,9 +58,6 @@ export class KaiztenMemory {
      */
     endTime
 
-    /**
-     * 
-     */
     constructor() {
         this.minTime = new Rx.BehaviorSubject()
         this.maxTime = new Rx.BehaviorSubject()
@@ -40,9 +65,6 @@ export class KaiztenMemory {
         this.endTime = new Rx.BehaviorSubject()
     }
 
-    /**
-     * 
-     */
     initialize() {
         let promise = new Promise((resolve, reject) => {
             this.timeEventsQueue = new Map()
@@ -56,14 +78,8 @@ export class KaiztenMemory {
         return promise
     }
 
-    /**
-     * 
-     */
     setUp() { }
 
-    /**
-     * 
-     */
     log() {
         for (var [key, value] of this.timeEventsQueue) {
             console.log(key)
@@ -75,12 +91,8 @@ export class KaiztenMemory {
         }
     }
 
-    /**
-     * 
-     * @param {*} time 
-     */
     getData(time) {
-        for (let i = 0; i < this.structure.length; i++) {
+        for (let i = 0; i &lt; this.structure.length; i++) {
             if (this.structure[i].time === time) {
                 return this.structure[i]
             }
@@ -88,14 +100,9 @@ export class KaiztenMemory {
         return null
     }
 
-    /**
-     * 
-     * @param {*} min 
-     * @param {*} max 
-     */
     contains(min, max) {
         let promise = new Promise((resolve, reject) => {
-            if ((min >= this.startTime.value) && (max <= this.endTime.value)) {
+            if ((min >= this.startTime.value) &amp;&amp; (max &lt;= this.endTime.value)) {
                 resolve()
             } else {
                 reject()
@@ -113,16 +120,16 @@ export class KaiztenMemory {
     getDataInRange(min, max) {
         let promise = new Promise((resolve, reject) => {
             //console.log("["+this.minTime.value + ", " + this.maxTime.value + "] " + "["+this.minTimeServer.value + ", " + maxTimeServer.value + "] " + min + " - " + max)
-            if ((min >= this.startTime.value) && (max <= this.endTime.value)) {
+            if ((min >= this.startTime.value) &amp;&amp; (max &lt;= this.endTime.value)) {
                 let response = {
                     min: min,
                     max: max,
                     records: []
                 }
-                for (let i = 0; i < this.structure.length; i++) {
+                for (let i = 0; i &lt; this.structure.length; i++) {
                     let data = this.structure[i]
                     let time = data.time
-                    if ((time >= min) && (time <= max)) {
+                    if ((time >= min) &amp;&amp; (time &lt;= max)) {
                         response.records.push(data)
                     }
                 }
@@ -134,12 +141,6 @@ export class KaiztenMemory {
         return promise
     }
 
-    /**
-     * 
-     * @param {*} time 
-     * @param {*} entityId 
-     * @param {*} properties 
-     */
     newEntity(time, entityId, properties) {
         //console.log("newEntity: " + time)
         let data = this.getData(time)
@@ -153,28 +154,17 @@ export class KaiztenMemory {
             //console.log("# New time: " + data.time + " previous: " + data.previousTime)
         }
         data.events.set(entityId, properties)
-        this.timeEventsQueue.set(time, data.properties) // CREO QUE ES UN ERROR
+        this.timeEventsQueue.set(time, data.properties)
         this.minTime.next(Math.min(this.minTime.value, time))
         this.maxTime.next(Math.max(this.maxTime.value, time))
     }
 
-    /**
-     * 
-     * @param {*} time 
-     * @param {*} id 
-     */
     removeEntity(time, id) {
         //console.log("removeEntity: " + time)
         //this.minTime.next(Math.min(this.minTime.value, time))
         //this.maxTime.next(Math.max(this.maxTime.value, time))
     }
 
-    /**
-     * 
-     * @param {*} time 
-     * @param {*} entityId 
-     * @param {*} properties 
-     */
     updateEntity(time, entityId, properties) {
         //console.log("updateEntity: " + time)
         let data = this.getData(time)
@@ -192,14 +182,6 @@ export class KaiztenMemory {
         this.maxTime.next(Math.max(this.maxTime.value, time))
     }
 
-    /**
-     * 
-     * @param {*} minRequired 
-     * @param {*} maxRequired 
-     * @param {*} min 
-     * @param {*} max 
-     * @param {*} error 
-     */
     onEndRequestMessage(minRequired, maxRequired, min, max, error) {
         if (error === undefined) {
             this.startTime.next(Math.min(this.startTime.value, minRequired))
@@ -217,4 +199,26 @@ export class KaiztenMemory {
             console.log('# End request: there was an error [' + minRequired + ', ' + maxRequired + '] -> [' + min + ', ' + max + ']')
         }
     }
-}
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="KaiztenMemory.html">KaiztenMemory</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed Jan 30 2019 10:09:16 GMT+0000 (WET)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

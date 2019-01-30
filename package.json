@@ -5,12 +5,16 @@
   "main": "index.js",
   "author": "Christopher Expósito-Izquierdo <cexposit@ull.edu.es>",
   "license": "MIT",
+  "scripts": {
+    "generate-docs": "jsdoc -r  . -d docs -c jsdoc.conf README.md"
+  },
   "repository": {
     "url": "https://github.com/KaizTen/kaizten-realtime-js",
     "type": "git"
   },
   "dependencies": {
     "gsap": "^2.0.2",
+    "jsdoc": "^3.5.5",
     "pixi.js": "^4.8.2",
     "rxjs": "^6.3.3"
   }

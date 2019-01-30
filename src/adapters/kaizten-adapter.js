@@ -1,34 +1,98 @@
+/**
+ * 
+ */
 export class KaiztenAdapter {
 
-    constructor (options) { }
+    /**
+     * 
+     */
+    constructor() { }
 
-    initialize () { }
+    /**
+     * 
+     */
+    initialize() { }
 
-    setUp () { }
+    /**
+     * 
+     */
+    setUp() { }
 
-    log () { }
+    /**
+     * 
+     */
+    log() { }
 
-    get (time) { }
+    /**
+     * 
+     * @param {*} minTime 
+     * @param {*} maxTime 
+     */
+    contains(minTime, maxTime) { }
 
-    get (minTime, maxTime) { }
+    /**
+     * 
+     * @param {*} time 
+     */
+    get(time) { }
 
+    /**
+     * 
+     * @param {*} minTime 
+     * @param {*} maxTime 
+     */
+    get(minTime, maxTime) { }
+
+    /**
+     * 
+     */
     getMinTime() { }
 
+    /**
+     * 
+     */
     getMaxTime() { }
 
-    getMinRequestedTimeData() { }
+    /**
+     * 
+     */
+    getStartTime() { }
 
-    getMaxRequestedTimeData() { }
+    /**
+     * 
+     */
+    getEndTime() { }
 
-    getMinTimeServer () { }
+    /**
+     * 
+     * @param {*} time 
+     * @param {*} id 
+     * @param {*} properties 
+     */
+    newEntity(time, id, properties) { }
 
-    getMaxTimeServer () { }
+    /**
+     * 
+     * @param {*} time 
+     * @param {*} id 
+     */
+    removeEntity(time, id) { }
 
-    newEntity (time, id, properties) { }
+    /**
+     * 
+     * @param {*} time 
+     * @param {*} id 
+     * @param {*} properties 
+     */
+    updateEntity(time, id, properties) { }
 
-    removeEntity (time, id) { }
-
-    updateEntity (time, id, properties) { }
-
-    onEndRequestMessage (minRequired, maxRequired, min, max, error) { }
+    /**
+     * 
+     * @param {*} minRequired 
+     * @param {*} maxRequired 
+     * @param {*} min 
+     * @param {*} max 
+     * @param {*} error 
+     */
+    onEndRequestMessage(minRequired, maxRequired, min, max, error) { }
 }
