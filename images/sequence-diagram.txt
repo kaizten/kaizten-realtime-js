@@ -1,22 +1,22 @@
 participant html
-participant kaizten-simulation
-participant kaizten-websockets
-participant kaizten-orm
+participant data manager
+participant websockets
+participant orm
 participant app
 
-kaizten-simulation --> html: not-ready
+data manager --> html: not-ready
 
-html ->+ kaizten-simulation: setUp
-kaizten-simulation -> kaizten-websockets: setUp
-kaizten-simulation -> kaizten-orm: setUp
-kaizten-simulation -> app: setUp
+html ->+ data manager: setUp
+data manager -> websockets: setUp
+data manager -> orm: setUp
+data manager -> app: setUp
 
-kaizten-simulation -> kaizten-orm: initialize
-kaizten-simulation -> app: initialize
+data manager -> orm: initialize
+data manager -> app: initialize
 
-kaizten-simulation --> html: ready
+data manager --> html: ready
 
-html ->+ kaizten-simulation: connect
-kaizten-simulation -> kaizten-websockets: connect
+html ->+ data manager: connect
+data manager -> websockets: connect
 
-kaizten-simulation --> html: connected
+data manager --> html: connected
