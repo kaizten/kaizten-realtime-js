@@ -64,10 +64,10 @@ export class Kaizten2d extends KaiztenApp {
 
     /**
      * 
-     * @param {*} simulation 
+     * @param {*} dataManager 
      */
-    setUp(simulation) {
-        super.setUp(simulation)
+    setUp(dataManager) {
+        super.setUp(dataManager)
         let that = this
         let promise = new Promise((resolve, reject) => {
             //console.log("setup 2d: " + this.id)

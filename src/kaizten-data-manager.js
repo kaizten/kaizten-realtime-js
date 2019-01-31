@@ -4,7 +4,7 @@ import * as Rx from 'rxjs'
 /**
  * 
  */
-export class KaiztenSimulation {
+export class KaiztenDataManager {
 
     /**
      * 
@@ -53,7 +53,7 @@ export class KaiztenSimulation {
      * 
      */
     setUp() {
-        console.log("kaizten-simulation: setUp")
+        console.log("data-manager: setUp")
         let that = this
         this.status.next('not ready')
         this.kaiztenWebSockets.setUp()
@@ -92,7 +92,7 @@ export class KaiztenSimulation {
      * @param {*} url 
      */
     async connect(url) {
-        console.log("kaizten-simulation: connect")
+        console.log("data-manager: connect")
         await this.kaiztenWebSockets.connect(url)
         this.status.next('connected')
     }
@@ -101,7 +101,7 @@ export class KaiztenSimulation {
      * 
      */
     async disconnect() {
-        console.log("kaizten-simulation: disconnect")
+        console.log("data-manager: disconnect")
         await this.kaiztenWebSockets.disconnect()
         this.status.next('ready')
     }
@@ -229,7 +229,7 @@ export class KaiztenSimulation {
      * 
      */
     onSetUp() {
-        console.log("kaizten-simulation: onSetUp")
+        console.log("data-manager: onSetUp")
         const promisesInitialize = []
         //let promiseWs = this.kaiztenWebSockets.initialize()
         let promiseStore = this.orm.initialize()
@@ -247,7 +247,7 @@ export class KaiztenSimulation {
      * 
      */
     onInitialize() {
-        console.log("kaizten-simulation: onInitialize")
+        console.log("data-manager: onInitialize")
         for (let i = 0; i < this.apps.length; i++) {
             if (this.apps[i].onInitialize !== undefined) {
                 this.apps[i].onInitialize()

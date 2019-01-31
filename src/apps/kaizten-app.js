@@ -6,7 +6,7 @@ export class KaiztenApp {
     /**
      * 
      */
-    kaiztenSimulation
+    dataManager
     /**
      * 
      */
@@ -20,7 +20,7 @@ export class KaiztenApp {
      * 
      */
     constructor() {
-        this.kaiztenSimulation = null
+        this.dataManager = null
         this.parentApp = null
         this.apps = []
     }
@@ -49,10 +49,10 @@ export class KaiztenApp {
 
     /**
      * 
-     * @param {*} simulation 
+     * @param {*} dataManager 
      */
-    setUp(simulation) {
-        this.kaiztenSimulation = simulation
+    setUp(dataManager) {
+        this.dataManager = dataManager
     }
 
     /**

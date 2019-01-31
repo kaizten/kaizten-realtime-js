@@ -42,6 +42,12 @@ export class KaiztenGsap extends KaiztenApp {
      */
     constructor() {
         super()
+        this.timeline = new TimelineMax({
+            paused: true,
+            onUpdate: () => { this.onUpdate() },
+            onComplete: () => { this.onCompleteTimeline() },
+            onReverseComplete: () => { this.onReverseCompleteTimeline() },
+        })
         this.tweenLabels = new Map()
         this.timeFirstTween = new Rx.BehaviorSubject()
         this.timeLastTween = new Rx.BehaviorSubject()
@@ -51,20 +57,14 @@ export class KaiztenGsap extends KaiztenApp {
 
     /**
      * 
-     * @param {*} simulation 
+     * @param {*} dataManager 
      */
-    setUp(simulation) {
-        super.setUp(simulation)
-        this.timeline = new TimelineMax({
-            paused: true,
-            onUpdate: () => { this.onUpdate() },
-            onComplete: () => { this.onCompleteTimeline() },
-            onReverseComplete: () => { this.onReverseCompleteTimeline() },
-        })
+    setUp(dataManager) {
+        super.setUp(dataManager)
         let promise = new Promise((resolve, reject) => {
             const promisesSetUp = []
             for (let i = 0; i < this.apps.length; i++) {
-                let promiseChild = this.apps[i].setUp(simulation)
+                let promiseChild = this.apps[i].setUp(dataManager)
                 promisesSetUp.push(promiseChild)
             }
             Promise.all(promisesSetUp).then(resolve)
@@ -119,7 +119,7 @@ export class KaiztenGsap extends KaiztenApp {
         console.log('# GSAP Start Request: [' + minRequired + ', ' + maxRequired + ']')
         this.minRequestedTime.next(Math.min(this.minRequestedTime.value, minRequired))
         this.maxRequestedTime.next(Math.max(this.maxRequestedTime.value, maxRequired))
-        this.kaiztenSimulation.getData(minRequired, maxRequired)
+        this.dataManager.getData(minRequired, maxRequired)
     }
 
     /**
