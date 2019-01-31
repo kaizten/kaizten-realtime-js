@@ -14,7 +14,7 @@ data manager -> app: setUp
 data manager -> orm: initialize
 data manager -> app: initialize
 
-data manager --> html: ready
+data manager -->-html: ready
 
 html ->+ data manager: connect
 data manager -> websockets: connect
